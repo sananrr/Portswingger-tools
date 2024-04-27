@@ -5,8 +5,8 @@ async def check_username(url, session, username):
     payload = {'username': username, 'password': 'password'}
     async with session.post(url, data=payload) as response:
         if not  "Invalid username or password." in await response.text():
-            print(f"valid username: {username}")
-            return True  # Signal to stop further execution
+            print(f"Valid username: {username}")
+            return True  
 
 async def main():
     url = input("Enter the URL: ")
